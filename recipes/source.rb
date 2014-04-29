@@ -71,7 +71,7 @@ template "#{Chef::Config['file_cache_path']}/ffmpeg-compiled_with_flags" do
     notifies :delete, "file[#{creates_ffmpeg}]", :immediately
 end
 
-bash "compile_ffmpeg" do
+bash "compile ffmpeg (on #{node['ffmpeg']['make_threads']} cpu)" do
     cwd "/usr/local/src/ffmpeg-#{node['ffmpeg']['version']}"
     code <<-EOH
         ./configure --prefix=#{node['ffmpeg']['prefix']} #{node['ffmpeg']['compile_flags'].join(' ')}
