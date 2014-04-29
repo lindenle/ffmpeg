@@ -27,3 +27,4 @@ default['ffmpeg']['compile_flags'] = [
 # provider will always attempt to update the git clone if a tag is used.
 default['ffmpeg']['version'] = "2.2.1" # 0.6.3
 default['ffmpeg']['src_url'] = "http://www.ffmpeg.org/releases/" # 0.6.3
+default['ffmpeg']['make_threads'] = node['cpu'] ? node['cpu']['total'].to_i : 2
