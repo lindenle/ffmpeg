@@ -72,7 +72,7 @@ template "#{Chef::Config['file_cache_path']}/ffmpeg-compiled_with_flags" do
 end
 
 bash "compile_ffmpeg" do
-    cwd "#{Chef::Config['file_cache_path']}/ffmpeg"
+    cwd "/usr/local/src/ffmpeg-#{node['ffmpeg']['version']}"
     code <<-EOH
         ./configure --prefix=#{node['ffmpeg']['prefix']} #{node['ffmpeg']['compile_flags'].join(' ')}
         make clean && make && make install
