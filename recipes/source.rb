@@ -6,7 +6,6 @@
 #
 
 include_recipe "build-essential"
-include_recipe "git"
 
 ffmpeg_packages.each do |pkg|
     package pkg do
@@ -44,11 +43,19 @@ file "#{creates_ffmpeg}" do
     action :nothing
 end
 
-git "#{Chef::Config['file_cache_path']}/ffmpeg" do
-    repository node['ffmpeg']['git_repository']
-    reference node['ffmpeg']['git_revision']
-    action :sync
-    notifies :delete, "file[#{creates_ffmpeg}]", :immediately
+ffmpeg_tar = "ffmpeg-#{node['ffmpeg']['version']}.tar.gz"
+ffmpeg_src_url = "#{node['ffmpeg']['src_url']}/#{ffmpeg_tar}"
+
+remote_file "/usr/local/src/#{ffmpeg_tar}" do
+  source ffmpeg_src_url
+  checksum node['ffmpeg']['checksum']
+  mode 0644
+  action :create_if_missing
+end
+
+execute "tar --no-same-owner -zxf #{ffmpeg_tar}" do
+  cwd "/usr/local/src"
+  creates "/usr/local/src/ffmpeg-#{node['ffmpeg']['version']}"
 end
 
 # Write the flags used to compile the application to Disk. If the flags
